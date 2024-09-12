@@ -14,7 +14,7 @@ class Response {
             return {
                 success: false,
                 code: error.status || 500,
-                message: "Bu kullanıcı rolü zaten kayıtlı.",
+                message: "Zaten kayıtlı.",
             };
         }else{
         return {

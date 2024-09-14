@@ -13,7 +13,7 @@ const config = require("../config")
 const jwt = require("jwt-simple")
 
 /* GET users listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', /*auth.checkroles("user_view"),*/ async (req, res, next) => {
   try {
 
     let users = await Users.find({});
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add", auth.checkroles("user_add"), async (req, res) => {
   let body = req.body;
   try {
 
@@ -92,7 +92,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.post("/update", async (req, res) => {
+router.post("/update", /*auth.checkroles("user_update"),*/ async (req, res) => {
   const body = req.body;
   try {
     // ID'nin varlığını kontrol et
@@ -160,7 +160,7 @@ router.post("/update", async (req, res) => {
   }
 });
 
-router.post("/delete", async (req, res) => {
+router.post("/delete",auth.checkroles("user_delete"), async (req, res) => {
   try {
     const body = req.body;
 

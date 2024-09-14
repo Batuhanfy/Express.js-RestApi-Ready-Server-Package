@@ -5,6 +5,9 @@ const UserRoles = require("../db/models/UserRoles")
 const RolePrivileges = require("../db/models/RolePrivileges")
 
 const config = require('../config')
+const Response = require("../Utils/Response")
+const {HTTP_CODES} = require("../config/Enum")
+const CustomError = require('./Error')
 
 
 module.exports = function () {
@@ -54,6 +57,28 @@ module.exports = function () {
         },
         authenticate: function() {
             return passport.authenticate("jwt", { session: false })
+<<<<<<< Updated upstream
+=======
+        },
+        checkroles: (...expectedRoles) => {
+           return (req,res,next)=> {
+            let i =0;
+            let privileges= req.user.roles.map(x=>x.key);
+
+            while(i<expectedRoles.length && !privileges.includes(expectedRoles[i]) ) i++;
+
+            if (i>= expectedRoles.length){
+                //hata
+                let response = Response.errorResponse(new CustomError(HTTP_CODES.UNAUTHORIZED,"Need Permission","Need Permission") )
+                res.status(response.code).json(response)
+            }
+            
+                return next(); //  başarılı
+            
+
+            
+           }
+>>>>>>> Stashed changes
         }
     }
 

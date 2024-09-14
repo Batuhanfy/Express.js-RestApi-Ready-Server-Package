@@ -4,7 +4,7 @@ const router = express.Router();
 const moment = require("moment");
 const AuditLogs = require("../db/models/AuditLogs");
 
-router.post('/', async (req, res, next) => {
+router.post('/', auth.checkroles("auditlogs_view"),async (req, res, next) => {
    try {
       let body = req.body;
       let query = {};

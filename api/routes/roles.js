@@ -6,9 +6,16 @@ const RolePrivileges = require('../db/models/RolePrivileges')
 const Response = require('../Utils/Response')
 const mongoose = require("mongoose");
 const role_privileges = require('../config/role_privileges');
+<<<<<<< Updated upstream
+=======
+const auth = require("../lib/auth")();
 
+router.all("*",auth.authenticate(),(req,res,next)=>{
+    next();
+});
+>>>>>>> Stashed changes
 
-router.get("/", async (req, res) => {
+router.get("/",/*auth.checkroles("role_view"),*/ async (req, res) => {
     try {
         let roles = await Roles.find({});
         res.json(Response.successResponse(roles));
@@ -19,7 +26,7 @@ router.get("/", async (req, res) => {
     }
 })
 
-router.post("/add", async (req, res) => {
+router.post("/add", auth.checkroles("role_add"),async (req, res) => {
 
     const body = req.body;
     try {
@@ -61,7 +68,7 @@ router.post("/add", async (req, res) => {
 
 })
 
-router.post("/update", async (req, res) => {
+router.post("/update",/*auth.checkroles("role_update"),*/ async (req, res) => {
     const body = req.body;
     try {
         if (!body._id) {
@@ -107,9 +114,7 @@ router.post("/update", async (req, res) => {
     }
 });
 
-
-
-router.post("/delete", async (req, res) => {
+router.post("/delete", auth.checkroles("role_delete"),async (req, res) => {
     const body = req.body;
     try {
         if (!body._id) {

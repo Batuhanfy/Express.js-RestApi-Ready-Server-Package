@@ -20,7 +20,7 @@ const logger = require('../lib/logger/LoggerClass')
 
 
 /* GET categories listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', auth.checkroles("category_view"),async (req, res, next) => {
 
     try {
         let categories = await Categories.find({});
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add",auth.checkroles("category_add"), async (req, res) => {
     let body = req.body;
     try {
 
@@ -63,7 +63,7 @@ router.post("/add", async (req, res) => {
     }
 });
 
-router.post("/update", async (req, res) => {
+router.post("/update",auth.checkroles("category_update"), async (req, res) => {
     let body = req.body;
     try {
 
@@ -90,7 +90,7 @@ router.post("/update", async (req, res) => {
     }
 })
 
-router.post("/delete", async (req, res) => {
+router.post("/delete",auth.checkroles("category_delete") ,async (req, res) => {
     let body = req.body;
 
     try {

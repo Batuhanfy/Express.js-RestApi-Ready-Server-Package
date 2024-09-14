@@ -9,3 +9,15 @@ format.printf(info=> `${info.timestamp} ${info.level.toUpperCase()} : [email:${i
 
 
 )
+
+
+const logger = createLogger(
+    {
+        level: LOG_LEVEL,
+        transports:[
+            new (transports.Console)({format:formats})
+    ]
+    }
+)
+
+module.exports=logger;

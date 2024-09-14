@@ -7,6 +7,13 @@ const config = require('../config');
 const fs = require("fs");
 const path = require('path');
 const logger = require('../lib/logger/LoggerClass')
+const auth = require("../lib/auth")();
+
+
+
+router.all("*",auth.authenticate(),(req,res,next)=>{
+    next();
+});
 
 
 /**

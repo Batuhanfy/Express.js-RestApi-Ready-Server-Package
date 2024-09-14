@@ -11,6 +11,108 @@ const CustomError = require('../lib/Error');
 const { HTTP_CODES } = require('../config/Enum');
 const config = require("../config")
 const jwt = require("jwt-simple")
+const auth = require("../lib/auth")();
+
+
+
+router.post("/register", async (req, res) => {
+  let body = req.body;
+  try {
+
+
+    let user = await Users.findOne({});
+    if (user) { // eğer sistemde bir kişi bile varsa bu endpointi kullanamazsın
+      return res.sendStatus(404);
+    }
+
+    if (!body.email || !body.password) {
+      return res.status(400).json({ message: "Verileri tam gönderiniz." });
+    }
+
+    if (is.not.email(body.email)) { // is_js kütüphanesi ile email mi kontrol ediyoruz !is.email yerine böyle bir kullanımı da var is.not şeklinde
+      return res.status(400).json({ message: "E-Postayı doğru gönderiniz." });
+    }
+
+    if (body.email < 4 || body.password < 8) {
+      return res.status(400).json({ message: "Email ve şifre uzunluklarına dikkat ediniz." })
+    }
+
+    let password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(8), null)
+
+    let createdUser = await Users.create({
+      email: body.email,
+      password, // key ve value değeri aynıysa direkt kendisini yazarak da tanımlayabilirsin password:password yerine yani.
+      first_name: body.first_name ? body.first_name : "",
+      last_name: body.last_name ? body.last_name : "",
+      phone_number: body.phone_number ? body.phone_number : ""
+    })
+
+
+    let newAdminRole = await Roles.create({
+      role_name: "SUPER_ADMIN",
+      created_by: createdUser._id
+    })
+
+
+
+    await UserRoles.create({
+      user_id: createdUser._id,
+      role_id: newAdminRole._id
+    })
+
+
+
+
+    res.status(HttpStatusCode.Created).json(Response.successResponse({ success: true }, 201));
+
+  } catch (err) {
+    let errorResponse = Response.errorResponse(err);
+    res.status(errorResponse.code).json(errorResponse);
+
+  }
+});
+
+router.post("/auth", async (req,res)=>{
+try{
+
+  let {email,password} = req.body;
+Users.validateFieldsforAuth(email,password)
+
+let user = await Users.findOne({email})
+
+if(!user){
+throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
+}
+
+if(!user.validPassword(password)){
+  throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
+}
+
+let payload ={
+  id: user._id,
+  exp: parseInt(Date.now() / 1000) * config.JWT.EXPIRE_TIME // 1 günlük süreyi kapsamış oldu.
+}
+
+let token = jwt.encode(payload,config.JWT.SECRET)
+
+let userData={ 
+  _id:user._id,
+  first_name: user.first_name,
+  last_name: user.last_name
+}
+
+res.json(Response.successResponse({token,user:userData}))
+
+}catch(err){
+  let errorResponse = Response.errorResponse(err);
+  res.status(errorResponse.code).json(errorResponse);
+
+}
+});
+
+router.all("*",auth.authenticate(),(req,res,next)=>{
+    next();
+});
 
 /* GET users listing. */
 router.get('/', async (req, res, next) => {
@@ -184,98 +286,5 @@ router.post("/delete", async (req, res) => {
 
 })
 
-router.post("/register", async (req, res) => {
-  let body = req.body;
-  try {
 
-
-    let user = await Users.findOne({});
-    if (user) { // eğer sistemde bir kişi bile varsa bu endpointi kullanamazsın
-      return res.sendStatus(404);
-    }
-
-    if (!body.email || !body.password) {
-      return res.status(400).json({ message: "Verileri tam gönderiniz." });
-    }
-
-    if (is.not.email(body.email)) { // is_js kütüphanesi ile email mi kontrol ediyoruz !is.email yerine böyle bir kullanımı da var is.not şeklinde
-      return res.status(400).json({ message: "E-Postayı doğru gönderiniz." });
-    }
-
-    if (body.email < 4 || body.password < 8) {
-      return res.status(400).json({ message: "Email ve şifre uzunluklarına dikkat ediniz." })
-    }
-
-    let password = bcrypt.hashSync(body.password, bcrypt.genSaltSync(8), null)
-
-    let createdUser = await Users.create({
-      email: body.email,
-      password, // key ve value değeri aynıysa direkt kendisini yazarak da tanımlayabilirsin password:password yerine yani.
-      first_name: body.first_name ? body.first_name : "",
-      last_name: body.last_name ? body.last_name : "",
-      phone_number: body.phone_number ? body.phone_number : ""
-    })
-
-
-    let newAdminRole = await Roles.create({
-      role_name: "SUPER_ADMIN",
-      created_by: createdUser._id
-    })
-
-
-
-    await UserRoles.create({
-      user_id: createdUser._id,
-      role_id: newAdminRole._id
-    })
-
-
-
-
-    res.status(HttpStatusCode.Created).json(Response.successResponse({ success: true }, 201));
-
-  } catch (err) {
-    let errorResponse = Response.errorResponse(err);
-    res.status(errorResponse.code).json(errorResponse);
-
-  }
-});
-
-router.post("/auth", async (req,res)=>{
-try{
-
-  let {email,password} = req.body;
-Users.validateFieldsforAuth(email,password)
-
-let user = await Users.findOne({email})
-
-if(!user){
-throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
-}
-
-if(!user.validPassword(password)){
-  throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
-}
-
-let payload ={
-  id: user._id,
-  exp: parseInt(Date.now() / 1000) * config.JWT.EXPIRE_TIME // 1 günlük süreyi kapsamış oldu.
-}
-
-let token = jwt.encode(payload,config.JWT.SECRET)
-
-let userData={ 
-  _id:user._id,
-  first_name: user.first_name,
-  last_name: user.last_name
-}
-
-res.json(Response.successResponse({token,user:userData}))
-
-}catch(err){
-  let errorResponse = Response.errorResponse(err);
-  res.status(errorResponse.code).json(errorResponse);
-
-}
-});
 module.exports = router;

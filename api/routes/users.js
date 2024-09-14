@@ -253,7 +253,7 @@ if(!user){
 throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
 }
 
-if(!Users.validPassword(password)){
+if(!user.validPassword(password)){
   throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
 }
 

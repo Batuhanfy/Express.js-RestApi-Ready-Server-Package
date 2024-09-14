@@ -28,7 +28,7 @@ validPassword(password){
   return bcrypt.compareSync(password,this.password)
 }
 
-validateFieldsforAuth(email,password){
+static validateFieldsforAuth(email,password){
   if(typeof password !== "string" || password.length < 8 || is.not.email(email)){
   throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","email or password wrong")
  

@@ -10,7 +10,7 @@ router.all("*",auth.authenticate(),(req,res,next)=>{
 });
 
 
-router.post('/', async (req, res, next) => {
+router.post('/', auth.checkroles("auditlogs_view"),async (req, res, next) => {
    try {
       let body = req.body;
       let query = {};

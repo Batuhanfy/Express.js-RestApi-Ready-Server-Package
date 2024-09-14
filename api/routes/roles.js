@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
         let errorResponse = Response.errorResponse(err);
         res.status(errorResponse.code).json(errorResponse);
     }
-})
+}) 
 
 router.post("/add", async (req, res) => {
 

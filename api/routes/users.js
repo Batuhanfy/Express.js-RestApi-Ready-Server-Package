@@ -7,7 +7,10 @@ const bcrypt = require('bcrypt')
 const is = require("is_js");
 const UserRoles = require('../db/models/UserRoles');
 const Roles = require('../db/models/Roles');
-
+const CustomError = require('../lib/Error');
+const { HTTP_CODES } = require('../config/Enum');
+const config = require("../config")
+const jwt = require("jwt-simple")
 
 /* GET users listing. */
 router.get('/', async (req, res, next) => {
@@ -29,9 +32,6 @@ router.get('/', async (req, res, next) => {
 
   }
 });
-
-
-
 
 router.post("/add", async (req, res) => {
   let body = req.body;
@@ -160,8 +160,6 @@ router.post("/update", async (req, res) => {
   }
 });
 
-
-
 router.post("/delete", async (req, res) => {
   try {
     const body = req.body;
@@ -185,11 +183,6 @@ router.post("/delete", async (req, res) => {
   }
 
 })
-
-
-
-
-
 
 router.post("/register", async (req, res) => {
   let body = req.body;
@@ -248,4 +241,41 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/auth", async (req,res)=>{
+try{
+
+  let {email,password} = req.body;
+Users.validateFieldsforAuth(email,password)
+
+let user = await Users.findOne({email})
+
+if(!user){
+throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
+}
+
+if(!Users.validPassword(password)){
+  throw new CustomError(HTTP_CODES.UNAUTHORIZED,"Validation Error","Email or password wrong")
+}
+
+let payload ={
+  id: user._id,
+  exp: parseInt(Date.now() / 1000) * config.JWT.EXPIRE_TIME // 1 günlük süreyi kapsamış oldu.
+}
+
+let token = jwt.encode(payload,config.JWT.SECRET)
+
+let userData={
+  _id:user._id,
+  first_name: user.first_name,
+  last_name: user.last_name
+}
+
+res.json(Response.successResponse({token,user:userData}))
+
+}catch(err){
+  let errorResponse = Response.errorResponse(err);
+  res.status(errorResponse.code).json(errorResponse);
+
+}
+});
 module.exports = router;

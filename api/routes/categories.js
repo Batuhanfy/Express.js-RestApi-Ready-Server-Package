@@ -6,7 +6,7 @@ const AuditLogs = require("../lib/AuditLogs");
 const config = require('../config');
 const fs = require("fs");
 const path = require('path');
-
+const logger = require('../lib/logger/LoggerClass')
 
 
 /**
@@ -50,10 +50,14 @@ router.post("/add", async (req, res) => {
         await category.save();
 
         AuditLogs.info(req.user?.email,"Categories","Add",{category});
+        logger.info(req.user?.email,"Categories","Add",category)
+
 
         res.json(Response.successResponse({ success: true }));
 
     } catch (err) {
+        logger.error(req.user?.email,"Categories","Add",err)
+
         let errorResponse = Response.errorResponse(err);
         res.status(errorResponse.code).json(errorResponse);
     }

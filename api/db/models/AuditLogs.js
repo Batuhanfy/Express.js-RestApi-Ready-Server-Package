@@ -3,10 +3,10 @@ let mongoose = require("mongoose");
 const schema = mongoose.Schema({
 
 level:{type:String,required:true},
-email:{type:String,required:true},
+email:{type:String,required:false},
 location:{type:String,required:true},
 proc_type:{type:String,required:true},
-log:{type:String,required:true}
+log:{type:mongoose.SchemaTypes.Mixed,required:true}
 },
 {
   versionKey: false,

@@ -6,6 +6,13 @@ const RolePrivileges = require('../db/models/RolePrivileges')
 const Response = require('../Utils/Response')
 const mongoose = require("mongoose");
 const role_privileges = require('../config/role_privileges');
+const auth = require("../lib/auth")();
+
+
+
+router.all("*",auth.authenticate(),(req,res,next)=>{
+    next();
+});
 
 
 router.get("/", async (req, res) => {

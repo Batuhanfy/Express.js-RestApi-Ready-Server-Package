@@ -11,41 +11,41 @@ class LoggerClass {
     }
 
 
-    createLogObject(email, location, proc_type, log) {
+    #createLogObject(email, location, proc_type, log) {
         return {
-            level, email, location, proc_type, log
+             email, location, proc_type, log
         }
     }
 
 
     info(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.info(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.info(logs);
     }
     warn(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.warn(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.warn(logs);
     }
     error(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.error(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.error(logs);
     }
 
     verbose(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.verbose(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.verbose(logs);
     }
     silly(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.silly(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.silly(logs);
     }
     http(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.http(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.http(logs);
     }
     debug(email, location, proc_type, log) {
-        let log = this.createLogObject(email, location, proc_type, log);
-        logger.debug(log);
+        let logs = this.#createLogObject(email, location, proc_type, log);
+        logger.debug(logs);
     }
 
 

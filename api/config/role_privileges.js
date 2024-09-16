@@ -5,7 +5,7 @@ module.exports = {
             name: "User Permissions"
         },
         {
-            id: "ROLE",
+            id: "ROLES",
             name: "Role Permissions"
         },
         {
@@ -14,93 +14,94 @@ module.exports = {
         },
         {
             id: "AUDITLOGS",
-            name:"Auditlogs"
+            name: "AuditLogs Permissions"
         }
     ],
-    privileges:[
+
+    privileges: [
         {
             key: "user_view",
             name: "User View",
-            groups: "USERS",
+            group: "USERS",
             description: "User view"
         },
         {
             key: "user_add",
             name: "User Add",
-            groups: "USERS",
+            group: "USERS",
             description: "User add"
         },
         {
             key: "user_update",
             name: "User Update",
-            groups: "USERS",
+            group: "USERS",
             description: "User update"
         },
         {
             key: "user_delete",
             name: "User Delete",
-            groups: "USERS",
+            group: "USERS",
             description: "User delete"
         },
-
-
-
         {
             key: "role_view",
             name: "Role View",
-            groups: "ROLE",
+            group: "ROLES",
             description: "Role view"
         },
         {
             key: "role_add",
             name: "Role Add",
-            groups: "ROLE",
+            group: "ROLES",
             description: "Role add"
         },
         {
             key: "role_update",
             name: "Role Update",
-            groups: "ROLE",
+            group: "ROLES",
             description: "Role update"
         },
         {
             key: "role_delete",
             name: "Role Delete",
-            groups: "ROLE",
+            group: "ROLES",
             description: "Role delete"
         },
-
-
         {
             key: "category_view",
             name: "Category View",
-            groups: "CATEGORIES",
-            description: "Categories view"
+            group: "CATEGORIES",
+            description: "Category view"
         },
         {
             key: "category_add",
-            name: "category Add",
-            groups: "CATEGORIES",
-            description: "category add"
+            name: "Category Add",
+            group: "CATEGORIES",
+            description: "Category add"
         },
         {
             key: "category_update",
-            name: "category Update",
-            groups: "CATEGORIES",
-            description: "category update"
+            name: "Category Update",
+            group: "CATEGORIES",
+            description: "Category update"
         },
         {
             key: "category_delete",
-            name: "category Delete",
-            groups: "CATEGORIES",
-            description: "category delete"
+            name: "Category Delete",
+            group: "CATEGORIES",
+            description: "Category delete"
+        },
+        {
+            key: "category_export",
+            name: "Category Export",
+            group: "CATEGORIES",
+            description: "Category Export"
         },
         {
             key: "auditlogs_view",
-            name: "Auditlogs View",
-            groups: "AUDITLOGS",
-            description: "auditlogs view"
+            name: "AuditLogs View",
+            group: "AUDITLOGS",
+            description: "AuditLogs View"
         }
     ]
-
 }

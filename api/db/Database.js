@@ -1,6 +1,6 @@
-let instance = null;
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
+let instance = null;
 class Database {
 
     constructor() {
@@ -8,22 +8,21 @@ class Database {
             this.mongoConnection = null;
             instance = this;
         }
+
         return instance;
     }
 
     async connect(options) {
-        console.log("Db Connecting...");
         try {
+            console.log("DB Connecting...");
+            let db = await mongoose.connect(options.CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
 
-            let db = await mongoose.connect(options.CONNECTION_STRING);
             this.mongoConnection = db;
-            console.log("Db Connected");
-        } catch (er) {
-            console.error(er);
+            console.log("DB Connected.");
+        } catch (err) {
+            console.error(err);
             process.exit(1);
         }
-
-
 
     }
 

@@ -1,26 +1,22 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 const schema = mongoose.Schema({
-
-level:{type:String,required:true},
-email:{type:String,required:false},
-location:{type:String,required:true},
-proc_type:{type:String,required:true},
-log:{type:mongoose.SchemaTypes.Mixed,required:true}
-},
-{
-  versionKey: false,
-  timestamps:{
-    createdAt:"created_at",
-    updatedAt:"updated_at"
-  }
-}
-)
+    level: String,
+    email: String,
+    location: String,
+    proc_type: String,
+    log: mongoose.SchemaTypes.Mixed
+},{
+    versionKey: false,
+    timestamps: {
+        createdAt: "created_at",
+        updatedAt: "updated_at"
+    }
+});
 
 class AuditLogs extends mongoose.Model {
 
 }
 
-
 schema.loadClass(AuditLogs);
-module.exports=mongoose.model("audit_logs",schema);
+module.exports = mongoose.model("audit_logs", schema);

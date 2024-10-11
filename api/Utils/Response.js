@@ -9,7 +9,7 @@ class Response {
         return {
             success: true,
             code: 200,
-            message: 'Request successful',
+            message: 'Request successfull',
             data: data
         };
     }

@@ -4,15 +4,15 @@ const Response = require("../lib/Response");
 const AuditLogs = require("../db/models/AuditLogs");
 const router = express.Router();
 const auth = require("../lib/auth")();
-
-router.all("*", auth.authenticate(), (req, res, next) => {
+ 
+ router.all("*", auth.authenticate(), (req, res, next) => {
     next();
 });
 
 router.post("/", auth.checkRoles("auditlogs_view"), async (req, res) => {
     try {
 
-        let body = req.body;
+         let body = req.body;
         let query = {};
         let skip = body.skip;
         let limit = body.limit;
